@@ -1,0 +1,294 @@
+自作C++ゲームエンジン設計ドキュメント
+
+DirectX12 / 3D / ECS / ImGui / Effekseer 対応
+
+1. 目的と前提
+目的
+
+DirectX12 を用いた 3D ゲーム制作
+
+C++ による自作エンジン（軽量・学習目的）
+
+ECS アーキテクチャ採用
+
+ImGui によるデバッグUI
+
+Effekseer によるエフェクト管理
+
+キーボード・ゲームパッド入力対応
+
+前提技術
+
+OS：Windows
+
+Graphics API：DirectX 12
+
+言語：C++
+
+描画方式：Forward Rendering（初期）
+
+対象：個人制作 / 学習用
+
+2. 全体アーキテクチャ概要
+Game
+ ↓
+Engine
+ ├─ Core（ゲームループ）
+ ├─ ECS（ロジック）
+ ├─ Renderer（描画）
+ │   └─ RHI
+ │       └─ DirectX12
+ ├─ Input
+ ├─ UI（ImGui）
+ └─ Effect（Effekseer）
+
+設計思想
+
+Game と Engine を完全分離
+
+OS / API 依存を下層に閉じ込める
+
+ECS を中心に全システムが連携
+
+外部ライブラリは必ず「統合レイヤ」を介す
+
+3. フォルダ構成（確定案）
+Engine/
+├─ Core/
+├─ Platform/Windows/
+├─ Graphics/
+│  ├─ RHI/
+│  ├─ DirectX12/
+│  ├─ Renderer/
+│  ├─ Resource/
+│  └─ Shader/
+├─ ECS/
+├─ Input/
+├─ UI/
+├─ Effect/
+├─ Scene/
+├─ Math/
+├─ Utility/
+└─ ThirdParty/
+
+Game/
+├─ Main.cpp
+├─ Components/
+├─ Systems/
+├─ Scenes/
+└─ Assets/
+
+4. エンジン最小必須機能
+4.1 Core（実行基盤）
+
+役割
+
+エンジン初期化
+
+ゲームループ制御
+
+Update / Render 呼び出し
+
+必要要素
+
+Engine
+
+Application
+
+GameLoop
+
+フレーム時間管理
+
+4.2 Platform（Win32）
+
+役割
+
+ウィンドウ生成
+
+メッセージループ
+
+OS依存処理
+
+必要要素
+
+WinMain
+
+WindowWin32
+
+MessageLoop
+
+4.3 Graphics（DirectX12）
+必須コンポーネント
+
+Device
+
+SwapChain
+
+CommandQueue
+
+CommandList
+
+Fence（フレーム同期）
+
+DescriptorHeap
+
+RenderTarget / DepthBuffer
+
+RHI の役割
+
+DirectX12 固有コードの隠蔽
+
+Renderer から API を切り離す
+
+5. ECS 設計
+5.1 基本構成
+
+Entity：ID のみ
+
+Component：POD 構造体
+
+System：ロジック単位
+
+World / Registry：管理者
+
+5.2 最低限必要なコンポーネント
+
+Transform
+
+MeshRenderer
+
+Camera
+
+InputComponent（必要に応じて）
+
+5.3 System の例
+
+TransformSystem
+
+RenderSystem
+
+InputSystem
+
+EffectSystem
+
+6. Renderer 設計
+Renderer の責務
+
+描画パス管理
+
+ECS から描画情報を収集
+
+RHI を使って描画命令発行
+
+初期実装方針
+
+Forward Rendering
+
+単一ライト
+
+単一メッシュ対応
+
+7. Input システム
+対応デバイス
+
+キーボード（Win32）
+
+ゲームパッド（XInput）
+
+InputManager
+
+デバイス状態の統一管理
+
+ECS System から参照
+
+8. ImGui 統合
+設計方針
+
+ImGui を直接使わせない
+
+Engine 内に統合レイヤを作る
+
+UI/
+ └ ImGuiLayer
+
+役割
+
+初期化
+
+フレーム開始 / 終了
+
+DX12 連携
+
+9. Effekseer 統合
+設計方針
+
+Renderer とは分離
+
+Effect 専用マネージャを用意
+
+Effect/
+ ├ EffekseerManager
+ └ EffectSystem（ECS）
+
+役割
+
+エフェクト再生
+
+位置・回転・スケール同期
+
+10. ECS × Renderer × Effect の関係
+ECS
+ ├ RenderSystem ──→ Renderer ──→ RHI ──→ DX12
+ └ EffectSystem ──→ EffekseerManager ──→ DX12
+
+
+Game は Renderer / DX12 を直接触らない
+
+System 経由でのみ描画・演出を行う
+
+11. Scene 管理
+Scene の役割
+
+Entity / Component の集合
+
+シーン切り替え管理
+
+シリアライズ対応
+
+12. 開発ステップ推奨順
+
+Win32 + DX12 初期化
+
+三角形描画
+
+Renderer クラス化
+
+ECS 導入（Transform + Render）
+
+モデル描画
+
+Input システム
+
+ImGui 統合
+
+Effekseer 統合
+
+Scene 管理
+
+13. 設計で最も重要な指針
+
+完璧を目指さない
+
+責務を混ぜない
+
+依存方向を一方向に保つ
+
+「Game は Engine を使うだけ」
+
+14. この設計のゴール
+
+小規模〜中規模 3D ゲームが作れる
+
+DX12 の理解が深まる
+
+他 API / 機能追加が可能な土台

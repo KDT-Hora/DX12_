@@ -14,6 +14,11 @@ namespace engine
 
 	public:
 
+		/// <summary>
+		/// 開始メソッド
+		/// この中でメインループも回してる
+		/// </summary>
+		/// <param name="appName">ウィンドウ名</param>
 		void Start(const TCHAR* appName);
 
 	};
