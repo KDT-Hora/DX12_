@@ -11,6 +11,9 @@ namespace engine
 		void initWindow(const TCHAR* appName);
 		void mainLoop();
 
+		HINSTANCE mHInst;
+		HWND mHWnd = NULL;
+
 
 	public:
 
@@ -20,6 +23,12 @@ namespace engine
 		/// </summary>
 		/// <param name="appName">ウィンドウ名</param>
 		void Start(const TCHAR* appName);
+
+		/// <summary>
+		/// ウィンドウハンドルの取得メソッド
+		/// </summary>
+		/// <returns></returns>
+		HWND GetWindow();
 
 	};
 
