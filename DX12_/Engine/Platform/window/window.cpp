@@ -89,6 +89,15 @@ void engine::Window::mainLoop()
 	}
 }
 
+/// <summary>
+/// コンストラクタ
+/// </summary>
+engine::Window::Window()
+	:WINDOW_WIDTH(1920),WINDOW_HEIGHT(1080)
+	,mHWnd(NULL)
+{
+}
+
 //	開始メソッド
 void engine::Window::Start(const TCHAR* appName)
 {
@@ -109,4 +118,22 @@ void engine::Window::Start(const TCHAR* appName)
 HWND engine::Window::GetWindow()
 {
 	return mHWnd;
+}
+
+/// <summary>
+/// ウィンドウ横幅取得メソッド
+/// </summary>
+/// <returns></returns>
+UINT engine::Window::GetWidth()const
+{
+	return WINDOW_WIDTH;
+}
+
+/// <summary>
+/// ウィンドウ立幅取得メソッド
+/// </summary>
+/// <returns></returns>
+UINT engine::Window::GetHeight()const
+{
+	return WINDOW_HEIGHT;
 }

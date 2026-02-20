@@ -5,17 +5,22 @@ namespace engine
 {
 	class Window
 	{
-		const UINT WINDOW_WIDTH = 1920;
-		const UINT WINDOW_HEIGHT = 1080;
+		UINT WINDOW_WIDTH;
+		UINT WINDOW_HEIGHT;
 
 		void initWindow(const TCHAR* appName);
 		void mainLoop();
 
 		HINSTANCE mHInst;
-		HWND mHWnd = NULL;
+		HWND mHWnd;
 
 
 	public:
+
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		Window();
 
 		/// <summary>
 		/// 開始メソッド
@@ -30,6 +35,17 @@ namespace engine
 		/// <returns></returns>
 		HWND GetWindow();
 
+		/// <summary>
+		/// ウィンドウ横幅取得メソッド
+		/// </summary>
+		/// <returns></returns>
+		UINT GetWidth()const;
+
+		/// <summary>
+		/// ウィンドウ立幅取得メソッド
+		/// </summary>
+		/// <returns></returns>
+		UINT GetHeight()const;
 	};
 
 
